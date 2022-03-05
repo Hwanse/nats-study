@@ -23,6 +23,7 @@ func main() {
 		log.Println(string(m.Data))
 		close(done)
 	})
+
 	// message publish to subject
 	conn.Publish(subject, []byte("hello world!"))
 
