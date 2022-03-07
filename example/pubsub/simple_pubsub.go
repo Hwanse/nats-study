@@ -27,6 +27,6 @@ func main() {
 	// message publish to subject
 	conn.Publish(subject, []byte("hello world!"))
 
-	<- done
+	<-done
 	log.Println("program end")
 }
