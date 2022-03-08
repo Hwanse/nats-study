@@ -9,8 +9,6 @@ import (
 	"time"
 )
 
-const EXIT = "exit"
-
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	subscriberNo := rand.Intn(10)
@@ -23,19 +21,23 @@ func main() {
 	}
 	defer conn.Close()
 
-	subject := "subject.1.test"
+	subject := "async.test"
 	wg := sync.WaitGroup{}
-
 	wg.Add(1)
 
 	// asynchronous subscription
-	conn.Subscribe(subject, func(msg *nats.Msg) {
+	subscription, err := conn.Subscribe(subject, func(msg *nats.Msg) {
 		message := string(msg.Data)
 		printReceivedMessage(message)
-		if message == EXIT {
+		if message == "exit" {
 			wg.Done()
 		}
 	})
+	if err != nil {
+		log.Fatalf("%s < subscription failed : %+v", subject, err)
+		return
+	}
+	defer subscription.Unsubscribe()
 
 	wg.Wait()
 	log.Println("subscriber end..")

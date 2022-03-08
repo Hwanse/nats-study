@@ -15,7 +15,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	subject := "subject.1.test"
+	subject := "async.test"
 
 	requireInputMessage()
 	scanner := bufio.NewScanner(os.Stdin)
