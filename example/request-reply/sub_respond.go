@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/nats-io/nats.go"
 	"log"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -16,25 +18,20 @@ func main() {
 	defer conn.Close()
 
 	subject := "request.test.1"
-	subscription, err := conn.SubscribeSync(subject)
+
+	subscription, err := conn.Subscribe(subject, func(msg *nats.Msg) {
+		log.Println("receive message : ", string(msg.Data))
+		msg.Respond([]byte(fmt.Sprintf("%s World!", string(msg.Data))))
+	})
 	if err != nil {
 		log.Fatalf("subscribe error occurred : %+v", err)
 		return
 	}
 	defer subscription.Unsubscribe()
 
-	tick := time.Tick(time.Second * 2)
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGINT)
+	<-c
 
-	for {
-		select {
-		case <-tick:
-			msg, err := subscription.NextMsg(time.Second * 2)
-			if err != nil {
-				log.Fatalf("receive message error occurred : %+v", err)
-				return
-			}
-
-			msg.Respond([]byte(fmt.Sprintf("%s World!", string(msg.Data))))
-		}
-	}
+	log.Println("subscriber exit")
 }

@@ -15,13 +15,6 @@ func main() {
 	}
 	defer conn.Close()
 
-	inbox := nats.NewInbox()
-	subscription, err := conn.SubscribeSync(inbox)
-	if err != nil {
-		log.Fatalf("inbox subscribe error occurred : %+v", err)
-		return
-	}
-	defer subscription.Unsubscribe()
 
 	subject := "request.test.1"
 	tick := time.Tick(time.Second * 2)
@@ -29,6 +22,14 @@ func main() {
 	for {
 		select {
 		case <-tick:
+			inbox := nats.NewInbox()
+			subscription, err := conn.SubscribeSync(inbox)
+			if err != nil {
+				log.Fatalf("inbox subscribe error occurred : %+v", err)
+				return
+			}
+			defer subscription.Unsubscribe()
+
 			err = conn.PublishRequest(subject, inbox, []byte("Hello"))
 			if err != nil {
 				log.Fatalf("message publish error occurred : %+v", err)
