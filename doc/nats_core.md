@@ -24,7 +24,8 @@
 - Subscriber는 와일드카드(`*`, `>`)를 활용하여 다양한 형식으로 Subject를 Listening 할 수 있다
 
 
-==== 그림 =====
+![Pub-Sub](https://user-images.githubusercontent.com/50852963/159159264-d1e14f99-69ef-4fb4-a800-0339b67f054f.png)
+
 
 <br>
 
@@ -37,7 +38,7 @@ Nats의 핵심 통신 메커니즘인 `Publish-Subscribe`를 활용해 Request-R
 - Nats에서는 다중 응답도 허용하는데, 첫 번째 응답은 활용되고 시스템에서 추가적인 응답은 효율적으로 버린다. 이를 통해 정교한 패턴이 여러 응답자들을 가질 수 있고, 응답 대기시간과 Jitter를 줄일 수 있다
 
 
-==== 그림 =====
+![Request-Reply](https://user-images.githubusercontent.com/50852963/159159275-380badf3-dec3-44a6-bbbf-ae8670000f84.png)
 
 <br>
 
@@ -51,4 +52,5 @@ Queue Subscriber를 사용하면 시스템 내결함성을 제공하고, 워크�
 - Queue Group의 장점은 서버의 설정을 통해서가 아닌 어플리케이션, Queue Subscriber들을 통해서 정의된다는 점이다
 - Queue Group을 활용하여 서비스 확장에 이상적이다. 유연성과 구성 설정사항의 부재는 Nats가 다양한 플랫폼 기술들과 함께 작동할 수 있는 우수한 서비스 통신 기술로 만들어준다 
 
-==== 그림 =====
+![Queue Group](https://user-images.githubusercontent.com/50852963/159159313-17eddccf-ff1c-4494-b1dd-425fb6868171.png)
+
